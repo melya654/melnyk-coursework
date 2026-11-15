@@ -187,4 +187,12 @@ if (require.main === module) {
   createApp().listen(port, () => console.log(`http://localhost:${port}`));
 }
 
-module.exports = { createApp };
+// Для Vercel: модуль має експортувати функцію (обробник запитів) за замовчуванням.
+let shared;
+function handler(req, res) {
+  if (!shared) shared = createApp({ dbFile: process.env.VERCEL ? '/tmp/app.db' : undefined });
+  return shared(req, res);
+}
+handler.createApp = createApp; // для тестів і локального запуску
+
+module.exports = handler;
