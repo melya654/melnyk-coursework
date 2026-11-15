@@ -34,6 +34,25 @@ function checkFormToken(token, sessionId, now = Date.now()) {
   return { ok: true };
 }
 
+// Одноразовість токена: один токен = одна відправка. Повторне використання (replay) відхиляється.
+// Сховище живе в памʼяті екземпляра сервера; запис зберігається, доки токен міг би бути чинним.
+function createTokenStore(maxEntries = 10000) {
+  const used = new Map(); // токен -> час, до якого його треба памʼятати
+  return {
+    consume(token, now = Date.now()) {
+      for (const [t, exp] of used) {
+        if (exp <= now) used.delete(t);
+        else break; // записи додаються в хронологічному порядку
+      }
+      if (used.has(token)) return false;
+      used.set(token, now + MAX_FORM_AGE_MS);
+      if (used.size > maxEntries) used.delete(used.keys().next().value);
+      return true;
+    },
+    size: () => used.size,
+  };
+}
+
 // Honeypot: приховане поле, яке людина не бачить і не заповнює, а бот — заповнює.
 function isHoneypotTripped(body) {
   return typeof body.website === 'string' && body.website.trim() !== '';
@@ -63,4 +82,4 @@ function escapeHtml(s) {
     .replace(/'/g, '&#39;');
 }
 
-module.exports = { issueFormToken, checkFormToken, isHoneypotTripped, looksLikeSpam, escapeHtml };
+module.exports = { issueFormToken, checkFormToken, createTokenStore, isHoneypotTripped, looksLikeSpam, escapeHtml };

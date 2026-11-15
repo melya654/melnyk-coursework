@@ -9,9 +9,27 @@ const PHONE_RE = /^\+380\d{9}$/;
 // Країни, дозволені у списку. Значення з форми порівнюється з цим allowlist.
 const COUNTRIES = ['UA', 'PL', 'DE', 'GB', 'US', 'OTHER'];
 
+// Невидимі та керівні символи: нульова ширина, м'який перенос, керування напрямком тексту (bidi), BOM.
+// Через них можна створити «порожнє» імʼя, візуально однакові значення або підмінити порядок тексту.
+// eslint-disable-next-line no-control-regex
+const INVISIBLE_RE = /[\u0000-\u001F\u007F­​-‏‪-‮⁠-⁤⁦-⁩﻿]/g;
+
 function normalize(value) {
   if (typeof value !== 'string') return '';
-  return value.normalize('NFC').trim();
+  return value.replace(INVISIBLE_RE, '').normalize('NFC').trim();
+}
+
+// Тимчасові (одноразові) поштові сервіси: типовий канал масової реєстрації ботів
+const DISPOSABLE_DOMAINS = [
+  'mailinator.com', 'guerrillamail.com', 'guerrillamail.net', '10minutemail.com', 'tempmail.com',
+  'temp-mail.org', 'throwawaymail.com', 'yopmail.com', 'trashmail.com', 'getnada.com',
+  'sharklasers.com', 'maildrop.cc', 'dispostable.com', 'fakeinbox.com', 'mintemail.com',
+  'mohmal.com', 'tempail.com', 'emailondeck.com', 'spamgourmet.com', 'moakt.com',
+];
+
+function isDisposableEmail(email) {
+  const domain = String(email).split('@').pop().toLowerCase();
+  return DISPOSABLE_DOMAINS.some((d) => domain === d || domain.endsWith('.' + d));
 }
 
 function normalizePhone(value) {
@@ -68,6 +86,7 @@ module.exports = {
   normalizePhone,
   validateName,
   validateEmail,
+  isDisposableEmail,
   validatePhone,
   validateCountry,
   validatePassword,
