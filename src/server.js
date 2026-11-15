@@ -18,6 +18,7 @@ function createApp(options = {}) {
   const repo = makeRepo(db);
   const app = express();
   const isProd = process.env.NODE_ENV === 'production';
+  const tokens = S.createTokenStore(); // використані токени форм
 
   app.disable('x-powered-by');
   app.set('trust proxy', 1);
@@ -93,6 +94,12 @@ function createApp(options = {}) {
       res.status(t.reason === 'too-fast' ? 429 : 403).json({ ok: false, errors: { _form: msg } });
       return true;
     }
+    // Токен одноразовий: повторна відправка з тим самим токеном відхиляється
+    if (!tokens.consume(req.body.formToken)) {
+      repo.logSpam(form, 'token-reused', req.ip);
+      res.status(403).json({ ok: false, errors: { _form: 'Форму вже надіслано. Оновіть сторінку.' } });
+      return true;
+    }
     return false;
   }
 
@@ -117,11 +124,14 @@ function createApp(options = {}) {
       password: typeof b.password === 'string' ? b.password : '',
     };
     const confirm = typeof b.passwordConfirm === 'string' ? b.passwordConfirm : '';
+    // Тимчасові поштові сервіси при реєстрації не приймаються
+    const disposable = !V.validateEmail(data.email) && V.isDisposableEmail(data.email);
+    if (disposable) repo.logSpam('signup', 'disposable-email', req.ip);
     if (
       fail(res, {
         firstName: V.validateName(data.firstName, 'Імʼя'),
         lastName: V.validateName(data.lastName, 'Прізвище'),
-        email: V.validateEmail(data.email),
+        email: V.validateEmail(data.email) || (disposable ? 'Тимчасові email-адреси не підтримуються' : null),
         phone: V.validatePhone(data.phone),
         country: V.validateCountry(data.country),
         password: V.validatePassword(data.password),
@@ -170,7 +180,10 @@ function createApp(options = {}) {
   });
 
   // Службова статистика для демонстрації (лише кількості, без персональних даних)
-  app.get('/api/stats', (req, res) => res.json(repo.stats()));
+  app.get('/api/stats', (req, res) => {
+    res.set('Cache-Control', 'no-store');
+    res.json({ ...repo.stats(), blocked: repo.spamBreakdown() });
+  });
 
   // Некоректний JSON та інші помилки — без витоку стеку
   app.use((err, req, res, next) => {
@@ -188,6 +201,7 @@ if (require.main === module) {
 }
 
 // Для Vercel: модуль має експортувати функцію (обробник запитів) за замовчуванням.
+// Застосунок створюється один раз при першому запиті. На Vercel база лежить у /tmp (тимчасова).
 let shared;
 function handler(req, res) {
   if (!shared) shared = createApp({ dbFile: process.env.VERCEL ? '/tmp/app.db' : undefined });
