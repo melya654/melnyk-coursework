@@ -58,6 +58,7 @@ function makeRepo(db) {
   const countUsers = db.prepare('SELECT COUNT(*) AS c FROM users');
   const countSpam = db.prepare('SELECT COUNT(*) AS c FROM spam_log');
   const lastUser = db.prepare('SELECT * FROM users ORDER BY id DESC LIMIT 1');
+  const spamByReason = db.prepare('SELECT reason, COUNT(*) AS count FROM spam_log GROUP BY reason ORDER BY count DESC');
   return {
     addUser: (u) => insertUser.run(u.firstName, u.lastName, u.email, u.phone, u.country, hashPassword(u.password)),
     findByEmail: (email) => findByEmail.get(email),
@@ -66,6 +67,7 @@ function makeRepo(db) {
     logSpam: (form, reason, ip) => insertSpam.run(form, reason, ip || null),
     stats: () => ({ users: countUsers.get().c, spam: countSpam.get().c }),
     lastUser: () => lastUser.get(),
+    spamBreakdown: () => spamByReason.all().map((r) => ({ reason: r.reason, count: Number(r.count) })),
   };
 }
 
