@@ -52,7 +52,7 @@
 
   const SUCCESS = {
     '/api/login': (data) => 'Вхід виконано' + (data.name ? ', ' + data.name : '') + '. Це демо: сесія не створюється.',
-    '/api/signup': () => 'Акаунт створено. Тепер можна увійти.',
+    '/api/signup': () => 'Акаунт створено. Перенаправляємо на сторінку входу…',
     '/api/forgot': () => 'Якщо такий акаунт існує, інструкцію буде надіслано. Це демо: лист не відправляється.',
   };
 
@@ -115,6 +115,10 @@
           if (meter) meter.style.width = '0';
           const msg = SUCCESS[form.dataset.endpoint];
           setStatus(status, 'ok', msg ? msg(data) : 'Дані успішно надіслано.');
+          // Після реєстрації повертаємо користувача на сторінку входу
+          if (form.dataset.endpoint === '/api/signup') {
+            setTimeout(() => { window.location.href = '/'; }, 1500);
+          }
         } else {
           const errs = data.errors || {};
           for (const [name, msg] of Object.entries(errs)) {
