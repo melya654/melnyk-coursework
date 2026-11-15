@@ -2,7 +2,7 @@
   "name": "secure-forms",
   "version": "1.0.0",
   "description": "Курсова робота: безпека веб-форм (валідація, захист від спаму, некоректні дані)",
-  "main": "src/server.js",
+"main": "index.js",
   "type": "commonjs",
   "engines": {
     "node": "22.x"
