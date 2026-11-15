@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Вхід — SecureForms</title>
+<meta name="description" content="Демонстраційні форми з валідацією та захистом від спаму.">
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+<a class="skip-link" href="#main">Перейти до форми</a>
+<div class="auth">
+<section class="auth-main">
+<a class="brand" href="/">Secure<span>Forms</span></a>
+<main class="auth-card" id="main">
+<h1>Вхід</h1>
+<p class="sub">Введіть email і пароль.</p>
+<form data-endpoint="/api/login" method="post" action="/api/login">
+<div class="field"><label for="email">Email</label><input id="email" name="email" type="email" autocomplete="email" maxlength="254" required aria-describedby="email-error"><div class="error" id="email-error" aria-live="polite"></div></div>
+<div class="field"><label for="password">Пароль</label><input id="password" name="password" type="password" autocomplete="current-password" maxlength="128" required aria-describedby="password-error"><div class="error" id="password-error" aria-live="polite"></div></div>
+<div class="hp" aria-hidden="true"><label for="website">Не заповнюйте це поле</label><input type="text" id="website" name="website" tabindex="-1" autocomplete="off"></div>
+<button type="submit">Увійти</button>
+<div class="status" role="status" aria-live="polite"></div>
+</form>
+<div class="links"><a href="/forgot.html">Забули пароль?</a></div>
+<a class="btn dark" href="/signup.html">Створити акаунт</a>
+</main>
+<div class="auth-foot">Курсова робота: безпека веб-форм. Демонстраційний проєкт.</div>
+</section>
+<aside class="auth-visual" aria-hidden="true">
+<p class="visual-title">Безпечні форми</p>
+<p class="visual-text">Кожне поле перевіряється двічі: у браузері та на сервері. Спам і некоректні дані не потрапляють у базу.</p>
+</aside>
+</div>
+<script src="/js/forms.js"></script>
+</body>
+</html>

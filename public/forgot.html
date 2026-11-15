@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Відновлення пароля — SecureForms</title>
+<meta name="description" content="Демонстраційні форми з валідацією та захистом від спаму.">
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+<a class="skip-link" href="#main">Перейти до форми</a>
+<div class="auth">
+<section class="auth-main">
+<a class="brand" href="/">Secure<span>Forms</span></a>
+<main class="auth-card" id="main">
+<h1>Відновлення пароля</h1>
+<p class="sub">Вкажіть email, і ми надішлемо інструкцію. У демо-версії лист не надсилається.</p>
+<form data-endpoint="/api/forgot" method="post" action="/api/forgot">
+<div class="field"><label for="email">Email</label><input id="email" name="email" type="email" autocomplete="email" maxlength="254" required aria-describedby="email-error"><div class="error" id="email-error" aria-live="polite"></div></div>
+<div class="hp" aria-hidden="true"><label for="website">Не заповнюйте це поле</label><input type="text" id="website" name="website" tabindex="-1" autocomplete="off"></div>
+<button type="submit">Надіслати</button>
+<div class="status" role="status" aria-live="polite"></div>
+</form>
+<a class="btn dark" href="/">Назад до входу</a>
+</main>
+<div class="auth-foot">Курсова робота: безпека веб-форм. Демонстраційний проєкт.</div>
+</section>
+<aside class="auth-visual soft" aria-hidden="true">
+<p class="visual-title">Однакова відповідь для всіх</p>
+<p class="visual-text">Сайт не розкриває, чи існує акаунт, і обмежує кількість запитів на одну адресу.</p>
+</aside>
+</div>
+<script src="/js/forms.js"></script>
+</body>
+</html>

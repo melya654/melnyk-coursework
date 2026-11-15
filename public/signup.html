@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Реєстрація — SecureForms</title>
+<meta name="description" content="Демонстраційні форми з валідацією та захистом від спаму.">
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+<a class="skip-link" href="#main">Перейти до форми</a>
+<div class="auth">
+<section class="auth-main">
+<a class="brand" href="/">Secure<span>Forms</span></a>
+<main class="auth-card" id="main">
+<h1>Реєстрація</h1>
+<p class="sub">Створіть акаунт. Усі поля обовʼязкові.</p>
+<form data-endpoint="/api/signup" method="post" action="/api/signup">
+<div class="row">
+<div class="field"><label for="firstName">Імʼя</label><input id="firstName" name="firstName" type="text" autocomplete="given-name" maxlength="60" required aria-describedby="firstName-error"><div class="error" id="firstName-error" aria-live="polite"></div></div>
+<div class="field"><label for="lastName">Прізвище</label><input id="lastName" name="lastName" type="text" autocomplete="family-name" maxlength="60" required aria-describedby="lastName-error"><div class="error" id="lastName-error" aria-live="polite"></div></div>
+</div>
+<div class="field"><label for="email">Email</label><input id="email" name="email" type="email" autocomplete="email" maxlength="254" required aria-describedby="email-error"><div class="error" id="email-error" aria-live="polite"></div></div>
+<div class="row">
+<div class="field"><label for="country">Країна</label><select id="country" name="country" required aria-describedby="country-error"><option value="">Оберіть</option><option value="UA">Україна</option><option value="PL">Польща</option><option value="DE">Німеччина</option><option value="GB">Велика Британія</option><option value="US">США</option><option value="OTHER">Інша</option></select><div class="error" id="country-error" aria-live="polite"></div></div>
+<div class="field"><label for="phone">Телефон</label><input id="phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" placeholder="+380501234567" maxlength="20" required aria-describedby="phone-error"><div class="error" id="phone-error" aria-live="polite"></div></div>
+</div>
+<div class="field"><label for="password">Пароль</label><input id="password" name="password" type="password" autocomplete="new-password" maxlength="128" required aria-describedby="password-error"><div class="meter" aria-hidden="true"><span></span></div><div class="error" id="password-error" aria-live="polite"></div></div>
+<div class="field"><label for="passwordConfirm">Повторіть пароль</label><input id="passwordConfirm" name="passwordConfirm" type="password" autocomplete="new-password" maxlength="128" required aria-describedby="passwordConfirm-error"><div class="error" id="passwordConfirm-error" aria-live="polite"></div></div>
+<div class="hp" aria-hidden="true"><label for="website">Не заповнюйте це поле</label><input type="text" id="website" name="website" tabindex="-1" autocomplete="off"></div>
+<button type="submit">Зареєструватися</button>
+<div class="status" role="status" aria-live="polite"></div>
+</form>
+<a class="btn dark" href="/">Назад до входу</a>
+</main>
+<div class="auth-foot">Курсова робота: безпека веб-форм. Демонстраційний проєкт.</div>
+</section>
+<aside class="auth-visual soft" aria-hidden="true">
+<p class="visual-title">Ваші дані під захистом</p>
+<p class="visual-text">Пароль зберігається лише у вигляді хешу. Країна обирається зі списку, а не вводиться вручну.</p>
+</aside>
+</div>
+<script src="/js/forms.js"></script>
+</body>
+</html>
