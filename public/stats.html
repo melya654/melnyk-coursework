@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Статистика захисту — SecureForms</title>
+<meta name="description" content="Кількість заблокованих спроб за причинами: honeypot, швидка відправка, токен, ліміт запитів.">
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+<a class="skip-link" href="#main">Перейти до змісту</a>
+<div class="auth">
+<section class="auth-main">
+<a class="brand" href="/">Secure<span>Forms</span></a>
+<main class="auth-card wide" id="main">
+<h1>Статистика захисту</h1>
+<p class="sub">Скільки спроб заблоковано і чому. Лічильники без IP-адрес і персональних даних.</p>
+<div class="totals">
+<div><strong id="total-users">0</strong><span>акаунтів створено</span></div>
+<div><strong id="total-blocked">0</strong><span>спроб заблоковано</span></div>
+</div>
+<table class="stats-table">
+<caption class="sr-only">Заблоковані спроби за причинами</caption>
+<thead><tr><th scope="col">Захист</th><th scope="col">Що перевіряє</th><th scope="col">Спроб</th></tr></thead>
+<tbody id="stats-body"></tbody>
+</table>
+<p class="sub" id="stats-note"></p>
+<a class="btn dark" href="/">Назад до входу</a>
+</main>
+<div class="auth-foot">Курсова робота: безпека веб-форм. Демонстраційний проєкт.</div>
+</section>
+<aside class="auth-visual soft" aria-hidden="true">
+<p class="visual-title">Спам не проходить</p>
+<p class="visual-text">Кожна заблокована спроба записується з причиною, щоб захист можна було перевірити і налаштувати.</p>
+</aside>
+</div>
+<script src="/js/stats.js"></script>
+</body>
+</html>
