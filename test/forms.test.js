@@ -229,3 +229,73 @@ test('заголовки безпеки та cookie', async () => {
   const cookie = r.headers.get('set-cookie');
   assert.ok(/HttpOnly/i.test(cookie) && /SameSite=Strict/i.test(cookie));
 });
+
+test('статистика: відображає заблоковані спроби за причинами без персональних даних', async () => {
+  const r = await fetch(base + '/api/stats');
+  const data = await r.json();
+  assert.equal(r.status, 200);
+  assert.ok(Array.isArray(data.blocked) && data.blocked.length > 0);
+  const reasons = data.blocked.map((b) => b.reason);
+  assert.ok(reasons.includes('honeypot') && reasons.includes('too-fast'));
+  assert.ok(data.blocked.every((b) => Object.keys(b).sort().join() === 'count,reason')); // без IP
+  assert.equal(data.spam, data.blocked.reduce((n, b) => n + b.count, 0));
+});
+
+// ---------- Нові захисти ----------
+
+test('токен одноразовий: повторна відправка з тим самим токеном відхиляється (replay)', async () => {
+  const token = oldToken();
+  const body = { email: 'replay@example.com', website: '', formToken: token };
+  const first = await post('/api/forgot', body);
+  const second = await post('/api/forgot', body);
+  assert.equal(first.status, 200);
+  assert.equal(second.status, 403);
+  assert.ok(app.repo.stats().spam > 0);
+  const reasons = (await (await fetch(base + '/api/stats')).json()).blocked.map((b) => b.reason);
+  assert.ok(reasons.includes('token-reused'));
+});
+
+test('сховище токенів: очищує прострочені записи і не росте безмежно', () => {
+  const store = S.createTokenStore(3);
+  const t0 = 1_000_000;
+  assert.equal(store.consume('a', t0), true);
+  assert.equal(store.consume('a', t0 + 1), false);
+  // після закінчення терміну дії запис забувається
+  assert.equal(store.consume('a', t0 + 2 * 60 * 60 * 1000), true);
+  for (let i = 0; i < 10; i++) store.consume('t' + i, t0 + 3 * 60 * 60 * 1000 + i);
+  assert.ok(store.size() <= 3);
+});
+
+test('тимчасові email відхиляються при реєстрації (включно з піддоменами)', async () => {
+  for (const email of ['bot@mailinator.com', 'bot@MAILINATOR.com', 'bot@x.yopmail.com']) {
+    const r = await post('/api/signup', goodSignup({ email }));
+    assert.equal(r.status, 422, email);
+    assert.ok(r.json.errors.email, email);
+  }
+  const ok = await post('/api/signup', goodSignup({ email: 'real.person@gmail.com' }));
+  assert.equal(ok.status, 200);
+  const reasons = (await (await fetch(base + '/api/stats')).json()).blocked.map((b) => b.reason);
+  assert.ok(reasons.includes('disposable-email'));
+});
+
+test('невидимі символи: «порожнє» імʼя з нульовою шириною відхиляється', async () => {
+  const r = await post('/api/signup', goodSignup({ firstName: '​​​', lastName: '‮‮' }));
+  assert.equal(r.status, 422);
+  assert.ok(r.json.errors.firstName && r.json.errors.lastName);
+});
+
+test('невидимі символи всередині значення прибираються перед збереженням', async () => {
+  const r = await post('/api/signup', goodSignup({ firstName: 'Ан​дрій﻿', phone: '+380​501234567' }));
+  assert.equal(r.status, 200);
+  const u = app.repo.lastUser();
+  assert.equal(u.first_name, 'Андрій');
+  assert.equal(u.phone, '+380501234567');
+});
+
+test('пароль не змінюється нормалізацією (спеціальні символи зберігаються)', async () => {
+  const email = 'pwd@example.com';
+  const password = 'Pа$$w0rd-​-ok1';
+  assert.equal((await post('/api/signup', goodSignup({ email, password, passwordConfirm: password }))).status, 200);
+  const login = await post('/api/login', { email, password, website: '', formToken: oldToken() });
+  assert.equal(login.status, 200);
+});
