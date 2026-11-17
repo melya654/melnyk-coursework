@@ -109,7 +109,7 @@ button[disabled] { opacity: 0.6; cursor: progress; }
 .totals div { border: 1px solid var(--line); border-radius: 3px; padding: 12px 14px; }
 .totals strong { display: block; font-size: 1.8rem; line-height: 1.1; }
 .totals span { color: var(--muted); font-size: 0.85rem; }
-.stats-table { width: 100%; border-collapse: collapse; font-size: 0.9rem; margin-bottom: 8px; }
+.stats-table { min-height: 430px; width: 100%;  border-collapse: collapse; font-size: 0.9rem; margin-bottom: 8px; }
 .stats-table th, .stats-table td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
 .stats-table th { font-size: 0.8rem; color: var(--muted); }
 .stats-table td:last-child, .stats-table th:last-child { text-align: right; font-variant-numeric: tabular-nums; }
