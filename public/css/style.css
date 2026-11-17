@@ -1,14 +1,17 @@
 :root {
-  --blue: #0b5cff;
-  --blue-dark: #0846c4;
-  --black: #111317;
-  --text: #15181e;
-  --muted: #5b6370;
-  --line: #c9ced6;
-  --soft: #e8ecf6;
-  --error: #b3261e;
-  --ok: #1b6e3c;
-  --focus: #0b5cff;
+  /* Токени збігаються зі змінними Figma (колекція SecureForms) */
+  --blue: #2161f5;       /* primary */
+  --blue-dark: #1a4fcc;  /* primary-hover (стан наведення, у Figma немає змінної) */
+  --black: #101827;      /* text (темна кнопка) */
+  --text: #101827;       /* text */
+  --muted: #5b6370;      /* muted */
+  --line: #c9ced6;       /* border */
+  --soft: #f0f3ff;       /* surface */
+  --danger: #ff5555;     /* danger: лише рамка поля (контраст 3,1:1 достатній для рамки) */
+  --error: #b3261e;      /* текст помилки темніший за danger: 6,5:1 проти 3,1:1 (WCAG 1.4.3) */
+  --ok: #1b6e3c;         /* текст успіху на фоні success */
+  --ok-bg: #ddf8e9;      /* success (фон повідомлення) */
+  --focus: #2161f5;      /* focus (= primary) */
 }
 
 * { box-sizing: border-box; }
@@ -65,7 +68,7 @@ input, select {
 input:focus-visible, select:focus-visible, button:focus-visible, a:focus-visible {
   outline: 3px solid var(--focus); outline-offset: 2px;
 }
-input[aria-invalid='true'], select[aria-invalid='true'] { border-color: var(--error); border-width: 2px; }
+input[aria-invalid='true'], select[aria-invalid='true'] { border-color: var(--danger); border-width: 2px; }
 .error { color: var(--error); font-size: 0.82rem; margin-top: 4px; min-height: 1.1em; }
 
 /* Honeypot: поле прибране за межі екрана */
@@ -87,7 +90,7 @@ button[disabled] { opacity: 0.6; cursor: progress; }
 
 .status { margin-top: 14px; padding: 10px 12px; border-radius: 3px; display: none; font-size: 0.9rem; }
 .status.show { display: block; }
-.status.ok { background: #e4f4ea; color: var(--ok); border: 1px solid #9fd2b2; }
+.status.ok { background: var(--ok-bg); color: var(--ok); border: 1px solid #9fd2b2; }
 .status.bad { background: #fbe9e7; color: var(--error); border: 1px solid #efb1ac; }
 
 .meter { height: 5px; background: var(--line); border-radius: 3px; overflow: hidden; margin-top: 6px; }
@@ -101,7 +104,6 @@ button[disabled] { opacity: 0.6; cursor: progress; }
 @media (max-width: 420px) { .row { grid-template-columns: 1fr; } }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
 
-
 /* Сторінка статистики */
 .auth-card.wide { max-width: 560px; }
 .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
@@ -109,9 +111,8 @@ button[disabled] { opacity: 0.6; cursor: progress; }
 .totals div { border: 1px solid var(--line); border-radius: 3px; padding: 12px 14px; }
 .totals strong { display: block; font-size: 1.8rem; line-height: 1.1; }
 .totals span { color: var(--muted); font-size: 0.85rem; }
-.stats-table { min-height: 430px; width: 100%;  border-collapse: collapse; font-size: 0.9rem; margin-bottom: 8px; }
+.stats-table { min-height: 430px; width: 100%; border-collapse: collapse; font-size: 0.9rem; margin-bottom: 8px; }
 .stats-table th, .stats-table td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
 .stats-table th { font-size: 0.8rem; color: var(--muted); }
 .stats-table td:last-child, .stats-table th:last-child { text-align: right; font-variant-numeric: tabular-nums; }
 .foot-link { color: var(--muted); }
-.stats-table td[colspan] { text-align: left; }
