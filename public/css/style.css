@@ -1,17 +1,17 @@
 :root {
   /* Токени збігаються зі змінними Figma (колекція SecureForms) */
-  --blue: #2161f5;       /* primary */
-  --blue-dark: #1a4fcc;  /* primary-hover (стан наведення, у Figma немає змінної) */
-  --black: #101827;      /* text (темна кнопка) */
-  --text: #101827;       /* text */
+  --blue: #0b5cff;       /* primary */
+  --blue-dark: #0049d6;  /* primary-hover (стан наведення, у Figma немає змінної) */
+  --black: #111317;      /* dark (темна кнопка) */
+  --text: #15181e;       /* text */
   --muted: #5b6370;      /* muted */
-  --line: #c9ced6;       /* border */
-  --soft: #f0f3ff;       /* surface */
+  --line: #d5dae3;       /* border */
+  --soft: #e8ecf6;       /* surface-soft */
   --danger: #ff5555;     /* danger: лише рамка поля (контраст 3,1:1 достатній для рамки) */
   --error: #b3261e;      /* текст помилки темніший за danger: 6,5:1 проти 3,1:1 (WCAG 1.4.3) */
   --ok: #1b6e3c;         /* текст успіху на фоні success */
   --ok-bg: #ddf8e9;      /* success (фон повідомлення) */
-  --focus: #2161f5;      /* focus (= primary) */
+  --focus: #0b5cff;      /* focus (= primary) */
 }
 
 * { box-sizing: border-box; }
